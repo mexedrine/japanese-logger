@@ -1,73 +1,37 @@
-Menu: 
-- 1. Create New Log
-    - 1. Start Study Now
-        - 1. Flashcards         
-        - 2. Reading             
-        - 3. Video Content  
-            - 1. Enter a note
-                - Prompt: Write your note and hit enter to begin (Char limit????)
-            - 2. Start time without a note
-                - Prompt: Start time recorded… /n Once you’re finished enter “end” or if you need a break enter “pause”
-                    - Prompt: You paused your session at ‘time-variable’ enter “end” to save and exit session or “resume” to continue study
-            - 3. Go back
-        - 4. Other
-            - Prompt: Enter a note (required) to start or enter “5” to go back
-        - 5. Go back
-- 2. View Total Hours
-    - Prints Hours
-- 3. Exit
-    - Exits
+// Do not read seriously, these are temporary and haven't been reviewed. Maybe be 
+// completely out of date in terms of current system.
 
-1. Keep Main focused on the menu / program flow
+- Main:
 
-Your Main should only handle the menu system (input, printing options, directing logic).
+    - When starting session fails in menus case 1, divert it to case 2, which is
+        now a menu where you can end or delete a previous session.
 
-It should not directly store the study sessions or calculations. Instead, it should call methods from other classes.
+    - Finish case 2 and 3. (Delete/End and View Hours)
 
-2. Create a StudySession class
+- StudySession:
 
-Purpose: Represents one single study session.
+    - Figure out a way that it can store the value of boolean inProgress like
+        writing to a file, this can then be used to check if it = true, then
+        sending an error back to Main saying you didn't end last session.
 
-Fields you’d want: String method, LocalDateTime startTime, LocalDateTime endTime, maybe a Duration.
+    - Pass true boolean to Manager once confirming session, pass false when
+        ending the session. This is just a flip from what is received initially
+        as inProgress from main.
 
-Methods:
+    - Rename current variable inProgress to isEnd. inProgress now functions how
+        the name suggests, after confirming session switch to true
 
-startSession() → set startTime
 
-endSession() → set endTime
+- Manager:
 
-getDuration() → return duration in minutes/hours
+    - Constructor should take input of boolean value isDelete, StudySession calls
+        method with false because it is a normal addition, Main will call it with
+        true from case 2 to delete the last session information. Print confirm it
 
-This is like your data model for one block of study.
+    - Method accepts value of "" for type, this prompts the manager to print
+        and not write anything when both boolean are false and type and note = ""
 
-3. Create a SessionManager (or Management) class
-
-Purpose: Manages a collection of study sessions.
-
-It could store all sessions in an ArrayList<StudySession>.
-
-Methods:
-
-addSession(StudySession session)
-
-getTotalHours() → loop through all sessions, sum durations
-
-listSessions() → print them out nicely
-
-This will keep your data organized.
-
-4. (Optional) A Storage helper class
-
-If you want persistence (saving/loading to CSV, JSON, or text file), you should not mix it into Main or StudySession.
-
-Storage handles saveSessions(List<StudySession>) and loadSessions().
-
-5. How the flow works together
-
-Main → handles menu.
-
-When you choose “Start Study”, Main creates a StudySession and runs its start/end logic.
-
-Once ended, it passes that session to SessionManager.addSession().
-
-When you choose “View Total Hours”, Main just calls sessionManager.getTotalHours() and prints it.
+    - Everytime method from Manager, if starting (inProgress=false) is called it 
+        can print the start time, if ending (inProgress=true) print the duration
+        of last study session and total. This functionality will be compatible
+        with delete from case 2 and view from
