@@ -4,20 +4,19 @@ import java.util.*; // for lists, maps, etc.
 
 public class Main {
 
-    public Main(String messageBack) {
-
-    }
-
     public static void main(String[] args) {
         
         Scanner scanner = new Scanner(System.in);
         int select;
-        String request = "";    
+        String request = "";   
+        StudySession session = new StudySession(); 
+        
+
 
         do {
             System.out.println("Input Selection: ");
             System.out.println("1. Start Study");
-            System.out.println("2. View or End Session");
+            System.out.println("2. View");
             System.out.println("3. Exit");
             select = scanner.nextInt();
             switch (select) {
@@ -41,18 +40,54 @@ public class Main {
                                 String selectString = scanner.nextLine();
                                 System.out.println("Enter a note or enter 'start' to begin session: ");
                                 String note = scanner.nextLine();
-                                if (note == "start") {
-                                    note = "";
+                                if (note.equals("start")) {
+                                    note.equals("");
+                                    session = new StudySession(request, select, note);
+                                    System.out.println(session.getLastResponse());
+                                    if (session.getLastResponse().contains("Invalid start/view request")) {
+                                        selectString = scanner.nextLine();
+                                            switch (selectString) {
+                                                case "end": {session = new StudySession("end", 0, "note");}                                                   
+                                                    break;
+                                                case "delete": {session = new StudySession("delete", 0, "note");}                    
+                                                    break;
+                                                case "exit": {System.exit(0);}                                                  
+                                                    break;
+                                                default: {System.exit(0);}
+                                                    break;
+                                            }
+
+                                    } else if (session.getLastResponse().contains("Start request successful")) {
+                                        selectString = scanner.nextLine();
+                                        if (selectString == "end") {session = new StudySession("end", 0, "");}
+                                    } else {System.exit(0);}
                                 }
-                                StudySession session = new StudySession(request, select, note);
+                                
 
                             } else {
 
                                 String selectString = scanner.nextLine();
                                 System.out.println("Enter a note to start session: ");
                                 String note = scanner.nextLine();
-                                StudySession session = new StudySession(request, 4, note);
+                                session = new StudySession(request, 4, note);
+                                System.out.println(session.getLastResponse());
+                                if (session.getLastResponse().contains("Invalid start/view request")) {
+                                        selectString = scanner.nextLine();
+                                            switch (selectString) {
+                                                case "end": {session = new StudySession("end", 0, "note");}                                                   
+                                                    break;
+                                                case "delete": {session = new StudySession("delete", 0, "note");}                    
+                                                    break;
+                                                case "exit": {System.exit(0);}                                                  
+                                                    break;
+                                                default: {System.exit(0);}
+                                                    break;
+                                            }
 
+                                    } else if (session.getLastResponse().contains("Start request successful")) {
+                                        selectString = scanner.nextLine();
+                                        if (selectString == "end") {session = new StudySession("end", 0, "");}
+                                    } else {System.exit(0);}
                             }
 
                         } else if (select == 5) {} 
@@ -63,12 +98,28 @@ public class Main {
                     break;
                 }
                 case 2: {
+                    request = "view";
+                    session = new StudySession(request, 0, "");
+                    System.out.println(session.getLastResponse());
+                    if (session.getLastResponse().contains("Invalid start/view request")) {
+                        String selectString = scanner.nextLine();
+                        selectString = scanner.nextLine();
+                            switch (selectString) {
+                                case "end": {session = new StudySession("end", 0, "note");}                                                   
+                                    break;
+                                case "delete": {session = new StudySession("delete", 0, "note");}                    
+                                    break;
+                                case "exit": {System.exit(0);}                                                  
+                                    break;
+                                default: {System.exit(0);}
+                                    break;
+                            }
 
-                    request = "search";
-                    StudySession session = new StudySession(request, 0, "");
-
+                    } else if (session.getLastResponse().contains("hours request successful")) {
+                        // print hours
+                    } else {System.exit(0);}
                     break;
-                }
+                }               
                 case 3: {
                     System.out.println("Now exiting:");
                     break;
