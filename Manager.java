@@ -1,4 +1,5 @@
 import java.time.*;
+
 // import java.io.*; // for file saving/loading
 public class Manager {
 
@@ -14,25 +15,21 @@ public class Manager {
         GetDuration findDuration = new GetDuration(date, time);
         StudyLength setDuration = new StudyLength(0);
 
-
         if (state && !delete) { // functions that work when session is in active memory
             activeSession = true;
             if (type != "") {
                 // call method to update list with data of new active session
-                System.out.println(type);
-                System.out.println(note);
-                System.out.println(date);
-                System.out.println(time);
-                System.out.println("You have started your session!");
+                System.out.println("You have started your " + type + "session!");
+
             } else {
                 // call method to print the data of last entry (unclosed entry)
                 System.out.println("Last session: 'date' 'time' ");
             }
-        } 
+        }
 
         else { // functions that work when session is out of active memory
             activeSession = false;
-            if (!delete && type != "") { 
+            if (!delete && type != "") {
                 // call method with function to update list with end session
                 System.out.println("You ended your " + type + " session!");
             } else if (!delete && type == "") {
@@ -44,7 +41,7 @@ public class Manager {
             }
         }
     }
-    
+
     public class GetDuration {
         public GetDuration(LocalDate date, LocalTime time) {
 

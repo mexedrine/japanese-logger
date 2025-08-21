@@ -1,82 +1,80 @@
+import java.time.*;
+
 public class StudySession {
     private String typeName[] = {
-        "Flashcards",
-        "Reading",
-        "Video",
-        "Other"
+            "Flashcards",
+            "Reading",
+            "Video",
+            "Other"
     };
-    
+
+    LocalDate date = LocalDate.now();
+    LocalTime time = LocalTime.now();
+
+    private boolean persistState; // SET TO THE VALUE, IF PERSIST FILE IS EMPTY = FALSE
+    private String persistData = "Card " + "Value " + "Kobe ";
     private int typeID;
     private String note;
-    private boolean persistenProgress; // SET TO THE VALUE FROM PERSISTENT STORAGE
-    private boolean inProgress = false;
-    private boolean isDelete;
-    private boolean isEnd;
+    private String request; // variable to receive the request from main. - start, end, delete, or search
 
-    public StudySession(boolean isDelete, boolean isEnd) {
-        this(isDelete, isEnd, 0, "");
-    }
-
-    public StudySession(boolean isDelete, boolean isEnd, int typeID, String note) {
+    public StudySession(String request, int typeID, String note) { // all parameters incl.
+        this.request = request;
         this.typeID = typeID;
         this.note = note;
-        this.isEnd = isEnd;
 
-        if (isEnd == persistenProgress && !isDelete){ // no invalid end request & !delete
-            
-            if (!isEnd) { 
-                // valid request to start session
-                startSession(typeName[typeID], note);
-            }
-            else if (typeID != 0) { 
-                // valid request to end session
-                endSession(typeName[typeID], note);
-            }
-            else {
-                // valid request to keep session ended
-                // call method with parameters to cause print all hours
-                Manager manager = new Manager(false, false, "", "");
-            }
-        } 
+        switch (request) {
+            case "start": { // start requests
+                if (!persistState) { // request is valid
 
-        if (isDelete) { // all attempts to delete
-            if (persistenProgress == isEnd) { // requests aligned with persistent state
-                if (isEnd) { // deletes entry
-                    deleteSession(); 
-                } else { // doesn't delete and prints hours
-                    Manager manager = new Manager(false, false, "", "");
-                }           
-            } else if (persistenProgress) {
-                Manager manager = new Manager(false, true, "", "");
-            } else {
-                System.out.println("Failed to delete, there is no active session");
-            }
-            
-        } 
+                } else { // invalid request
 
-        if (isEnd != persistenProgress && !isDelete) { // invalid request, no state changes will occur
-            boolean state = persistenProgress;
-            if (state == true) { // attempt to start new session during active session
-                System.out.println("Session start failed, you cannot start a session during an active session.");
-                // call method with specific parameters, causes print of last session
-                Manager manager = new Manager(false, state, "", "");
+                }
+                break;
             }
-            if (state == false && isEnd) { // attempt to end without active session. no manager
-                System.out.println("Session end failed, you cannot end a session without an active session.");
+
+            case "end": { // end request
+                if (persistState) { // valid end request
+
+                } else { // invalid end request
+
+                }
+                break;
             }
-        } 
-        
+
+            case "delete": { // delete requests
+                if (persistState) { // valid delete request
+
+                } else { // invalid delete request
+
+                }
+                break;
+            }
+
+            case "search": { // search requests
+                if (!persistState) { // search is valid (no active session)
+
+                } else { // search is invalid (active session)
+
+                }
+                break;
+            }
+
+            default: {
+            } // add exception handler
+        }
     }
 
-    public void startSession(String type, String note) {
-        Manager manager = new Manager(false, true, type, note);
-    }
+    public void HandlePersist(String name, String note, LocalDate date, LocalTime time) { // decide if it should just be
+                                                                                          // save or handle
+        if (name != "" && note != "") {
+            StringBuilder buildString = new StringBuilder();
+            buildString.append(name);
+            buildString.append(note);
+            buildString.append(date);
+            buildString.append(time);
 
-    public void endSession(String type, String note) {
-        Manager manager = new Manager(false, false, type, note);
-    }
-
-        public void deleteSession() {
-        Manager manager = new Manager(true, false, "", "");
+            String persistData = buildString.toString();
+            // write persist data to file
+        }
     }
 }

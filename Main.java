@@ -6,76 +6,75 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int select;
+        String request = "";
         do {
             System.out.println("Input Selection: ");
             System.out.println("1. Start Study");
-            System.out.println("2. End or Delete");
-            System.out.println("3. View Total Hours");
-            System.out.println("4. Exit");
+            System.out.println("2. View or End Session");
+            System.out.println("3. Exit");
             select = scanner.nextInt();
-        switch (select) {
-            case 1:
-                
-                do {
-                    System.out.println("Select Study/Immersion Method");
-                    System.out.println("1. Flashcards");
-                    System.out.println("2. Reading");
-                    System.out.println("3. Video");
-                    System.out.println("4. Other");
-                    System.out.println("5. Go back");
-                    select = scanner.nextInt();
+            switch (select) {
+                case 1: {
 
-                    if (select > 0 && select < 4){ // note is optional
+                    do {
+                        System.out.println("Select Study/Immersion Method");
+                        System.out.println("1. Flashcards");
+                        System.out.println("2. Reading");
+                        System.out.println("3. Video");
+                        System.out.println("4. Other");
+                        System.out.println("5. Go back");
+                        request = "";
+                        select = scanner.nextInt();
 
-                        System.out.println("Enter 'start' or an optional note to begin: " + scanner.nextLine());
-                        String selectString = scanner.nextLine(); 
+                        if (select > 0 && select < 5) { // note is optional
+                            request = "start";
 
-                        // add prompt and option to either delete or end last study session if starting session fails
+                            if (select != 4) {
 
-                        if (selectString == "start") { // starts w no note
-                            StudySession session = new StudySession(false, false, select, ""); 
-                            System.out.println(session + "Start studying now...");
-                        } else { // start incl. note
-                            StudySession session = new StudySession(false, false, select, selectString);
-                            System.out.println(session + "/nStart studying now...");
+                                String selectString = scanner.nextLine();
+                                System.out.println("Enter a note or enter 'start' to begin session: ");
+                                String note = scanner.nextLine();
+                                if (note == "start") {
+                                    note = "";
+                                }
+                                StudySession session = new StudySession(request, select, note);
+
+                            } else {
+
+                                String selectString = scanner.nextLine();
+                                System.out.println("Enter a note to start session: ");
+                                String note = scanner.nextLine();
+                                StudySession session = new StudySession(request, 4, note);
+
+                            }
+
+                        } else if (select == 5) {
+                            // go back
+                            return;
+                        } else {
+                            System.out.println("Invalid Input");
                         }
-                        
-                        
-                        return;
-                    } else if (select == 4) { // non optional note
-                        
-                    } if (select == 5) {
-                        // go back
-                        return;
-                    
-                    
-                    } else {
-                        System.out.println("Invalid Input");
-                    }
-
-                } while (select != 5);
-                break;
-
-            case 2: // make a do while loop here
-                {
-                    StudySession session = new StudySession(true, false);
+                    } while (select != 5);
+                    break;
                 }
-                break;
+                case 2: {
 
-            case 3: // attempt to print all hours
-                {StudySession session = new StudySession(false, false);}
-                break;
+                    request = "search";
+                    StudySession session = new StudySession(request, 0, "");
 
-            case 4:
-                System.out.println("Now exiting:");
-                break;
-                
-            default:
-                System.out.println("Invalid Input");
-                break;
-        }
-        
-    } while(select != 4); 
-    scanner.close();
+                    break;
+                }
+                case 3: {
+                    System.out.println("Now exiting:");
+                    break;
+                }
+                default: {
+                    System.out.println("Invalid Input");
+                    break;
+                }
+            }
+
+        } while (select != 3);
+        scanner.close();
     }
 }
