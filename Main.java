@@ -3,10 +3,17 @@ import java.util.*; // for lists, maps, etc.
 // option later: javafx.* → if you want a desktop GUI.
 
 public class Main {
+
+    public Main(String messageBack) {
+
+    }
+
     public static void main(String[] args) {
+        
         Scanner scanner = new Scanner(System.in);
         int select;
-        String request = "";
+        String request = "";    
+
         do {
             System.out.println("Input Selection: ");
             System.out.println("1. Start Study");
@@ -48,10 +55,8 @@ public class Main {
 
                             }
 
-                        } else if (select == 5) {
-                            // go back
-                            return;
-                        } else {
+                        } else if (select == 5) {} 
+                        else {
                             System.out.println("Invalid Input");
                         }
                     } while (select != 5);
