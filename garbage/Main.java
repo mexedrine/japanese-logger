@@ -1,3 +1,4 @@
+package garbage;
 import java.util.*; // for lists, maps, etc.
 // import java.sql.*; // SQLite driver, use JSON or CSV for now.
 // option later: javafx.* → if you want a desktop GUI.

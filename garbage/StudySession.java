@@ -1,14 +1,14 @@
+package garbage;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.io.*;
 import java.util.Scanner; 
 
 public class StudySession {
 
-    private String lastResponse;
     private boolean currentState; 
     private int typeID;
-    private String note;
-    private String request; 
+    private String note, request, lastResponse;
     private String typeName[] = {
             "Flashcards",
             "Reading",
@@ -132,11 +132,14 @@ public class StudySession {
     public void writeTempFile(String name, String note, LocalDate date, LocalTime time) { // decide if it should just be
                                                                                           // save or handle
         if (!name.isEmpty() && !note.isEmpty()) {
+            LocalDateTime unformatTime = LocalDateTime.now();
+            DateTimeFormatter myTimeFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            String formattedTime = unformatTime.format(myTimeFormat); // formated date-time to remove nanoseconds
+
             StringBuilder buildString = new StringBuilder();
             buildString.append(name).append(",");
             buildString.append(note).append(",");
-            buildString.append(LocalDate.now()).append(",");
-            buildString.append(LocalTime.now());
+            buildString.append(formattedTime);
 
             String tempData = buildString.toString();
             try { 
