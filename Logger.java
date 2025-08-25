@@ -4,13 +4,12 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class Logger {    
+public class Logger {
     DateTimeFormatter my_datetimeformat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
     String time_ofstart, time_ofend, activity, note;
     long startms, endms;
     double duration;
     ZoneId zoneId = ZoneId.of("America/Chicago");
-
 
     public static void main(String[] args) {
         Logger application = new Logger();
@@ -21,16 +20,15 @@ public class Logger {
     private void enterMenu() {
         Scanner scanner = new Scanner(System.in);
         boolean running = true; // optional
-            
-        while (running){
-            System.out.println ( 
-                "1. Start Session:\n" + 
-                "2. End Session:\n" +
-                "3. Print Total Hours:\n" +
-                "4. Exit"
-                );
+
+        while (running) {
+            System.out.println(
+                    "1. Start Session:\n" +
+                            "2. End Session:\n" +
+                            "3. Print Total Hours:\n" +
+                            "4. Exit");
             byte numselect = scanner.nextByte();
-        
+
             switch (numselect) {
                 case 1:
                     startSession();
@@ -43,7 +41,7 @@ public class Logger {
                     break;
                 case 4:
                     running = false;
-                    break;                                    
+                    break;
                 default:
                     System.out.println("Invalid input.");
                     break;
@@ -54,21 +52,39 @@ public class Logger {
 
     private void startSession() {
         if (time_ofstart == null) {
+            Scanner sessionscan = new Scanner(System.in);
+            System.out.println(
+                    "Enter your study activity\n" +
+                            "Known study activities include but are not limited to:\n" +
+                            "- Flashcards\n" +
+                            "- Manga\n" +
+                            "- Anime \n" +
+                            "- Wrting \n" +
+                            "- Textbook");
+            activity = sessionscan.nextLine();
+
+            System.out.println(
+                    "Enter an optional note:");
+            note = sessionscan.nextLine();
+
             LocalDateTime unformatted_datetime = LocalDateTime.now();
             time_ofstart = unformatted_datetime.format(my_datetimeformat);
 
             ZonedDateTime zonedDateTime = unformatted_datetime.atZone(zoneId);
             startms = zonedDateTime.toInstant().toEpochMilli();
 
-            System.out.println("Time started: " + time_ofstart);
-        } else {System.out.println("You are already in an active session, started at: " + time_ofstart);}
+            System.out.println("Time started: " + time_ofstart + " with the activity: " + activity
+                    + ", along with the note: " + note);
+        } else {
+            System.out.println("You are already in an active session, started at: " + time_ofstart);
+        }
     }
 
     private void endSession() {
         if (time_ofstart != null) {
             LocalDateTime unformatted_datetime = LocalDateTime.now();
             time_ofend = unformatted_datetime.format(my_datetimeformat);
-            
+
             ZonedDateTime zonedDateTime = unformatted_datetime.atZone(zoneId);
             endms = zonedDateTime.toInstant().toEpochMilli();
             long millis = endms - startms;
@@ -76,18 +92,20 @@ public class Logger {
 
             System.out.println("Time ended: " + time_ofend + "\nDuration: " + duration + " hours.");
             saveSession();
-        } else {System.out.println("No active session.");}
+        } else {
+            System.out.println("No active session.");
+        }
     }
 
     private void saveSession() {
         try (FileWriter file = new FileWriter("sessions.csv", true)) {
-            
+
             file.write(String.format("%.2f,%s,%s,%s,%s%n", duration, time_ofstart, time_ofend, activity, note));
             System.out.println("Session successfully saved as: ");
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("Failed to save session: ");
         } finally {
-            System.out.println(String.format("%.2f,%s,%s,%s,%s%n", duration, time_ofstart, time_ofend, activity, note));
+            String.format("%.2f,%s,%s,%s,%s%n", duration, time_ofstart, time_ofend, activity, note);
             time_ofstart = null;
             time_ofend = null;
             startms = 0;
@@ -101,7 +119,7 @@ public class Logger {
         try (Scanner filescan = new Scanner(new File("sessions.csv"))) {
             filescan.useDelimiter(",|\\n");
             double total = 0;
-            
+
             while (filescan.hasNext()) {
                 if (filescan.hasNextDouble()) {
                     double value = filescan.nextDouble();
@@ -110,10 +128,10 @@ public class Logger {
                     filescan.next();
                 }
             }
-        System.out.println(total + " hours logged in total.");
-        filescan.close();
-        return;
-        } catch(Exception e) {
+            System.out.println(total + " hours logged in total.");
+            filescan.close();
+            return;
+        } catch (Exception e) {
             System.out.println("Error reading sessions.csv");
         }
     }
