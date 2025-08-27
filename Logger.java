@@ -9,7 +9,8 @@ public class Logger {
     String time_ofstart, time_ofend, activity, note;
     long startms, endms;
     double duration;
-    ZoneId zoneId = ZoneId.of("America/Chicago");
+    ZoneId zoneId = ZoneId.of("America/Chicago"); // TIMEZONE HERE
+    Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         Logger application = new Logger();
@@ -18,8 +19,8 @@ public class Logger {
     }
 
     private void enterMenu() {
-        Scanner scanner = new Scanner(System.in);
-        boolean running = true; // optional
+        
+        boolean running = true; // menu loop's exit condition when false
 
         while (running) {
             System.out.println(
@@ -28,6 +29,7 @@ public class Logger {
                             "3. Print Total Hours:\n" +
                             "4. Exit");
             byte numselect = scanner.nextByte();
+            scanner.nextLine();
 
             switch (numselect) {
                 case 1:
@@ -47,12 +49,11 @@ public class Logger {
                     break;
             }
         }
-        scanner.close();
     }
 
     private void startSession() {
         if (time_ofstart == null) {
-            Scanner sessionscan = new Scanner(System.in);
+            // Scanner sessionscan = new Scanner(System.in); // close the scanner break the program. no, i dont care to debug
             System.out.println(
                     "Enter your study activity\n" +
                             "Known study activities include but are not limited to:\n" +
@@ -61,11 +62,11 @@ public class Logger {
                             "- Anime \n" +
                             "- Wrting \n" +
                             "- Textbook");
-            activity = sessionscan.nextLine();
+            activity = scanner.nextLine();
 
             System.out.println(
-                    "Enter an optional note:");
-            note = sessionscan.nextLine();
+                    "Enter an optional note (NO COMMAS!):");
+            note = scanner.nextLine();
 
             LocalDateTime unformatted_datetime = LocalDateTime.now();
             time_ofstart = unformatted_datetime.format(my_datetimeformat);
@@ -90,7 +91,7 @@ public class Logger {
             long millis = endms - startms;
             duration = millis / (1000.0 * 60 * 60); // truncate is lame
 
-            System.out.println("Time ended: " + time_ofend + "\nDuration: " + duration + " hours.");
+            System.out.printf("Time ended: %s%nDuration: %.2f hours.%n", time_ofend, duration);
             saveSession();
         } else {
             System.out.println("No active session.");
@@ -99,25 +100,27 @@ public class Logger {
 
     private void saveSession() {
         try (FileWriter file = new FileWriter("sessions.csv", true)) {
-
-            file.write(String.format("%.2f,%s,%s,%s,%s%n", duration, time_ofstart, time_ofend, activity, note));
-            System.out.println("Session successfully saved as: ");
-        } catch (Exception e) {
-            System.out.println("Failed to save session: ");
-        } finally {
-            String.format("%.2f,%s,%s,%s,%s%n", duration, time_ofstart, time_ofend, activity, note);
+            String row = String.format("%.2f,%s,%s,%s,%s%n", 
+                                   duration, time_ofstart, time_ofend, activity, note);
+        file.write(row);
+        System.out.println("Session saved: " + row.trim());
+        
+            // reset after successful save
             time_ofstart = null;
             time_ofend = null;
             startms = 0;
             endms = 0;
             duration = 0;
+        } catch (Exception e) {
+            System.out.println("Failed to save session: " + e.getMessage());
         }
     }
+
 
     private void printTotal() {
 
         try (Scanner filescan = new Scanner(new File("sessions.csv"))) {
-            filescan.useDelimiter(",|\\n");
+            filescan.useDelimiter(",|\\n"); // sets basic csv delimiter
             double total = 0;
 
             while (filescan.hasNext()) {
@@ -128,7 +131,7 @@ public class Logger {
                     filescan.next();
                 }
             }
-            System.out.println(total + " hours logged in total.");
+            System.out.printf("Total: %.2f hours logged.%n", total);
             filescan.close();
             return;
         } catch (Exception e) {
