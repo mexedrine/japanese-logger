@@ -3,12 +3,13 @@ use it properly if you download it, i didn't make it foolproof, because i am laz
 
 //
 
-!!! TO DO: 
+!!! TO DO:
+
 1. Set your own timezone in the program at line 12, ZoneId zoneId = ZoneId.of("America/Chicago");, google java zoneid values i guess.
 
-2. Reccomend you add all the different study activities you do into the println message in the startSession() method, there isn't a functionality that limits the inputs for this so I set my own standard. 
+2. Reccomend you add all the different study activities you do into the println message in the startSession() method, there isn't a functionality that limits the inputs for this so I set my own standard.
 
-3. Make sure you have sessions.csv in the same folder as the java script. 
+3. Make sure you have sessions.csv in the same folder as the java script.
 
 4. Ready to use.
 
@@ -17,6 +18,7 @@ use it properly if you download it, i didn't make it foolproof, because i am laz
 //
 
 How to use:
+
 1. Have java installed.
 
 2. Execute program with "java Logger" command in terminal.
@@ -33,8 +35,10 @@ How to use:
 
 Development to-do:
 
+- Add a method to calculate the rate of studying per day and print the estimated date I would hit 150 hrs
+
 - No commas in note, fix by wrapping values or move to actual csv package.
 
 - Function to export to spreadsheet?
- 
+
 - Hours w/ minutes display.
